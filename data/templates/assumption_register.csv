@@ -1,0 +1,2 @@
+assumption_id,parameter,description,base_value,low_value,high_value,unit,distribution,source_type,source_id_or_citation,rationale,model_location,decision_impact,status,reviewer,review_date,notes
+ASM-001,control_effectiveness,Estimated proportional reduction in modeled loss,,,,proportion,,to_be_determined,,,analysis/run_analysis.py,high,draft,,,
