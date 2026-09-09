@@ -4,20 +4,22 @@
 
 ## Overview
 
-Healthcare organizations make security investment decisions under uncertainty. This research examines how public healthcare breach evidence, statistical analysis, security guidance, and financial decision analysis can be connected to support security investment decisions.
+Healthcare organizations must decide where to invest limited security resources. This research uses public healthcare breach data to study severe breach patterns and then connects that evidence to security priorities and financial decision-making.
+
+The study moves through three main questions: **What does the breach data show? What security capabilities should receive greater consideration? Under what conditions would those investments make financial sense?**
 
 ## Research Question
 
-> **“How can public healthcare breach evidence be used to identify security priorities and evaluate the financial conditions under which security architecture investments are supportable?”**
+> **“How can healthcare breach data inform security investment decisions?”**
 
 ### Research Objectives
 
-1. Examine patterns in the frequency and severity of reported healthcare breaches.
-2. Identify observable breach characteristics associated with severe outcomes after adjustment for other characteristics.
-3. Map empirical findings to relevant security capabilities using NIST guidance.
-4. Evaluate candidate security capabilities using defined decision criteria and alternative weighting assumptions.
-5. Evaluate the financial conditions under which candidate security investments become supportable using cost, exposure, loss, and risk-reduction assumptions.
-6. Develop a phased security investment roadmap informed by the combined statistical, security, and financial analysis.
+1. **Analyze breach patterns** to understand the frequency and severity of reported healthcare breaches.
+2. **Identify factors associated with severe breaches** using statistical analysis and logistic regression.
+3. **Connect the statistical evidence to security capabilities** using NIST guidance.
+4. **Compare security priorities** using defined decision criteria and alternative weighting approaches.
+5. **Evaluate financial feasibility** using cost, breach exposure, potential loss, risk reduction, NPV, payback, and break-even analysis.
+6. **Develop a phased investment roadmap** that brings the statistical, security, and financial analyses together.
 
 ## Data Source
 
@@ -27,37 +29,28 @@ Healthcare organizations make security investment decisions under uncertainty. T
 
 ```mermaid
 flowchart LR
-    A[HHS OCR Data] --> B[Descriptive Analysis]
-    B --> C[Statistical Analysis]
+    A[Healthcare Breach Data] --> B[Breach Analysis]
+    B --> C[Statistical Modeling]
     C --> D[Model Validation]
-    D --> E[Security Capability Evaluation]
-    E --> F[Financial Decision Analysis]
+    D --> E[Security Priorities]
+    E --> F[Financial Evaluation]
     F --> G[Investment Roadmap]
 ```
 
-The research separates statistical evidence from security and financial decision-making. Observed associations are not interpreted as causal effects, and statistical results are not treated as direct recommendations to purchase a particular technology.
+The statistical analysis identifies patterns and associations in reported breaches. Those findings are then used as evidence in a separate evaluation of security capabilities. The financial analysis evaluates whether candidate investments are economically supportable under different assumptions.
 
-## Analytical Methods
+## Methods
 
-The quantitative analysis uses descriptive statistics, categorical association testing, and multivariable logistic regression. Model performance and stability are evaluated using a stratified holdout sample and five-fold stratified cross-validation.
+The research uses descriptive statistics and categorical association analysis to examine breach patterns. Multivariable logistic regression is used to estimate which observable characteristics are associated with severe reported breaches after accounting for other characteristics in the model. Holdout testing and five-fold cross-validation are used to evaluate model performance and stability.
 
-The security decision analysis connects empirical evidence with NIST guidance and evaluates candidate capabilities using multiple decision criteria and alternative weighting approaches. Financial analysis examines annualized loss expectancy, avoided loss, net present value, payback, break-even conditions, and sensitivity to key assumptions.
+Security capabilities are then evaluated using the statistical evidence, NIST guidance, and defined decision criteria. Alternative weighting approaches are used to examine whether priorities change when greater emphasis is placed on risk-related criteria.
 
-## Research Structure
-
-| Stage | Purpose |
-|---|---|
-| Descriptive analysis | Examine breach patterns and severity |
-| Statistical modeling | Estimate adjusted associations with severe outcomes |
-| Model validation | Evaluate discrimination and stability |
-| Security capability evaluation | Translate evidence into comparable security priorities |
-| Financial decision analysis | Evaluate financial feasibility and break-even conditions |
-| Investment roadmap | Sequence security priorities based on the combined analysis |
+The financial analysis evaluates investment costs and expected avoided losses using annualized loss expectancy, net present value, payback, break-even analysis, and sensitivity analysis.
 
 ## Scope
 
-The research examines reported healthcare breach events and uses an observational design. Statistical relationships are interpreted as associations rather than causal effects. Financial analysis is scenario-based and is intended to evaluate decision conditions rather than establish a universal return on security investment.
+The study examines associations in reported healthcare breach data rather than causal effects. The statistical model is used to support interpretation and risk stratification, not to predict whether a specific healthcare organization will experience a severe breach. Financial analysis is scenario-based and evaluates the conditions under which an investment may be financially supportable.
 
 ## Standards and Guidance
 
-The security decision analysis is informed by **NIST Cybersecurity Framework 2.0**, **NIST SP 800-30**, and **NIST SP 800-207**.
+The security analysis is informed by **NIST Cybersecurity Framework 2.0**, **NIST SP 800-30**, and **NIST SP 800-207**.
