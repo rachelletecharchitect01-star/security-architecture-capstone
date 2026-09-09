@@ -1,12 +1,18 @@
-# Data Directory
+# Data
 
-## Rules
+## Primary source
 
-- Keep downloaded source files unchanged in `raw/`.
-- Store analysis-ready outputs in `processed/`.
-- Do not manually edit processed datasets; generate them with scripts.
-- Record every source in `templates/source_inventory.csv`.
-- Record all non-observed inputs in `templates/assumption_register.csv`.
-- Do not commit confidential, personal, controlled, or restricted information.
+The empirical analysis uses healthcare breach records reported through the U.S. Department of Health and Human Services Office for Civil Rights (HHS OCR).
 
-The placeholder files preserve otherwise-empty directories. Replace them only when qualified data are added.
+## Analytical sample
+
+- Source records: 7,884
+- Model-ready observations: 7,877
+- Severe breaches: 801 (10.2%)
+- Severe-breach definition: at least 100,000 individuals affected
+
+## Important scope limitation
+
+The source contains reported breach events. It does not provide an organization-year denominator and therefore cannot estimate the annual probability that a particular healthcare organization will experience a breach.
+
+Raw source data are not committed here. This directory documents the source and preparation assumptions so the repository remains focused on the analytical workflow.

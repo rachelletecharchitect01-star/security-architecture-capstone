@@ -1,91 +1,48 @@
-# Security Architecture Capstone
+# Healthcare Security Architecture Investments
 
-## Security Architecture Investment and Organizational Risk
+**Using Public Breach Evidence, NIST Guidance, and Financial Decision Analysis**
 
-This repository is the working home for an MS Business Analytics capstone examining how publicly available evidence can be used to evaluate the business value of security-architecture investments.
+This applied business analytics project examines how healthcare organizations can use public breach evidence to make more defensible security investment decisions. It connects descriptive analysis, interpretable statistical modeling, model validation, NIST-aligned security capability evaluation, and financial sensitivity analysis.
 
-The project is designed as a transparent, reproducible secondary-data study. It connects security architecture, cyber-risk indicators, incident consequences, and financial decision analysis without relying on confidential organizational data.
+## Decision flow
 
-> **Working status:** Framework and starter materials. Research questions, data sources, assumptions, and model specifications remain subject to academic review.
+```mermaid
+flowchart LR
+    A[HHS OCR breach data] --> B[Descriptive analysis]
+    B --> C[Logistic regression]
+    C --> D[Holdout validation & cross-validation]
+    D --> E[Security capability evaluation]
+    E --> F[Financial scenario & sensitivity analysis]
+    F --> G[Phased investment roadmap]
+```
 
-## Working research question
+The analyses answer different questions. Statistical associations are not treated as causal effects or direct investment recommendations, and the financial model is evaluated separately from the regression.
 
-**How can organizations use public data and transparent financial assumptions to estimate the potential risk-reduction value and return on investment of security-architecture investments?**
+## Key findings
 
-Supporting questions:
+- **7,877** model-ready reported healthcare breaches; **801 (10.2%)** met the study definition of severe (at least 100,000 individuals affected).
+- Network-server involvement was associated with **3.49× adjusted odds** of a severe breach (95% CI: 2.84–4.30).
+- Business Associate entity type was associated with **3.55× adjusted odds** relative to Healthcare Providers (95% CI: 2.70–4.66).
+- Held-out **ROC-AUC = .776**; five-fold cross-validation mean **ROC-AUC = .757 (SD = .012)**.
+- **Monitoring and Detection** ranked first under both equal-weight and risk-focused decision approaches.
+- None of the primary financial scenarios produced positive five-year NPV. Sensitivity analysis showed that a **$100,000 initial investment with no annual operating cost required an 11.7% risk reduction to break even**.
 
-1. Which public indicators can represent cyber-risk exposure, incident likelihood, and incident consequence?
-2. How sensitive are ROI conclusions to assumptions about implementation cost, control effectiveness, and avoided loss?
-3. Under what conditions does a proposed security-architecture investment produce positive expected value?
-4. Which assumptions contribute most to uncertainty in the decision?
+## Interpretation
 
-## Study at a glance
-
-| Component | Planned approach |
-|---|---|
-| Study type | Quantitative secondary-data decision analysis |
-| Unit of analysis | Defined organizational, industry, or scenario-level observation |
-| Evidence base | Public government, regulatory, industry, and research sources |
-| Primary outputs | Expected-loss estimates, ROI, net present value, payback period, and sensitivity results |
-| Uncertainty | Scenario analysis and Monte Carlo simulation where inputs support it |
-| Reproducibility | Versioned data inventory, documented transformations, scripted analysis, and explicit assumptions |
-| Intended use | Graduate capstone research and decision-support demonstration |
+The regression is best understood as an interpretable risk-stratification model for patterns among reported breaches, not as an organization-specific breach predictor. Security rankings provide comparative decision support rather than proof of control effectiveness. Financial feasibility depends on implementation cost, organizational exposure, potential loss, and realistically achievable risk reduction.
 
 ## Repository structure
 
-- `paper/` — manuscript outline and drafting materials
-- `presentation/` — defense-deck outline and speaking-plan starter
-- `data/raw/` — immutable source-data landing area
-- `data/processed/` — analysis-ready datasets
-- `data/templates/` — source inventory and assumption templates
-- `analysis/` — reproducible Python analysis scaffold
-- `appendices/` — protocols, variable definitions, and model assumptions
-- `references/` — literature and citation tracking
-- `project_management/` — fast-track schedule and decision log
+- `analysis/` — computational analysis and documentation
+- `data/` — data-source and preparation documentation
+- `docs/` — methodology, findings, and decision approach
+- `figures/` — exported analytical figures
+- `references/` — primary data, standards, and methodological references
 
-## Analytical framework
+## Study scope
 
-The core decision model compares the expected economic loss before and after a security-architecture investment.
+The empirical source is the U.S. Department of Health and Human Services Office for Civil Rights breach reporting data. The analysis focuses on reported breaches and therefore does not estimate the annual probability that a particular healthcare organization will experience a breach. The severe-breach threshold of 100,000 affected individuals is a study-defined analytical outcome.
 
-```text
-Baseline expected loss = incident probability × expected consequence
+## Core question
 
-Residual expected loss = baseline expected loss × (1 − assumed control effectiveness)
-
-Expected annual benefit = baseline expected loss − residual expected loss
-
-ROI = (discounted benefits − discounted costs) / discounted costs
-```
-
-The final model will separate sourced observations from analyst assumptions. It will also report sensitivity ranges so that results are not presented as more certain than the evidence permits.
-
-## Quick start
-
-1. Review `CAPSTONE_3MONTH_FASTTRACK.md`.
-2. Refine the research question in `paper/PAPER_OUTLINE.md`.
-3. Record candidate sources in `data/templates/source_inventory.csv`.
-4. Document every modeling assumption in `data/templates/assumption_register.csv`.
-5. Place downloaded source files in `data/raw/` without altering them.
-6. Build cleaned datasets in `data/processed/`.
-7. Run the analysis scaffold from the repository root:
-
-```bash
-python -m venv .venv
-# Windows: .venv\Scripts\activate
-# macOS/Linux: source .venv/bin/activate
-pip install -r requirements.txt
-python analysis/run_analysis.py
-```
-
-## Research guardrails
-
-- Use only lawfully accessible public or properly licensed data.
-- Preserve raw files and document source URLs, access dates, licenses, and transformations.
-- Do not infer causation from observational associations without an appropriate identification strategy.
-- Keep empirical inputs, literature-derived parameters, and scenario assumptions distinguishable.
-- Avoid publishing sensitive security configurations or operational details.
-- Report uncertainty, limitations, and alternative assumptions alongside point estimates.
-
-## Current milestone
-
-The repository contains the project framework and starter files. The next milestone is to finalize the problem statement, select the specific security-architecture investment or comparison, and qualify the public datasets before modeling begins.
+> What should be prioritized, why does it deserve priority, and under what financial conditions does the investment make sense?

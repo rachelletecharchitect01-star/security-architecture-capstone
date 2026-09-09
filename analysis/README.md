@@ -1,15 +1,7 @@
 # Analysis
 
-`run_analysis.py` contains the starter financial decision model and validation rules.
+This directory documents the computational analysis supporting the study.
 
-## Planned workflow
+The workflow includes data qualification and preparation, descriptive analysis, association testing, multivariable logistic regression, model diagnostics, stratified holdout validation, five-fold stratified cross-validation, security capability scoring, weighting sensitivity, and financial scenario and break-even analysis.
 
-1. Load qualified inputs from processed data and the assumption register.
-2. Validate units, ranges, missingness, and time alignment.
-3. Calculate baseline and residual expected loss.
-4. Calculate discounted benefits, costs, ROI, NPV, and payback.
-5. Run scenario, sensitivity, and break-even analyses.
-6. Save tables and figures to `analysis/outputs/`.
-7. Record the code version and input-data version used for reported results.
-
-The starter script exits intentionally until qualified inputs are supplied. This prevents illustrative numbers from being presented as findings.
+The primary model is intentionally interpretable. Logistic regression estimates adjusted associations with the binary severe-breach outcome rather than maximizing black-box predictive accuracy.
