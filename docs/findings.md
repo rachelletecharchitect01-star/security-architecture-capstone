@@ -1,25 +1,35 @@
-# Findings
+# Findings and Decision Interpretation
 
-## Breach patterns
+## Security Capability Priorities
 
-The final analytical sample contains 7,877 reported breaches, including 801 (10.2%) classified as severe. Breach size is strongly right-skewed: the median is approximately 4,000 individuals affected, compared with a mean of approximately 136,399.
+Monitoring and Detection ranked first under both the equal-weight (**4.50**) and risk-focused (**4.65**) approaches.
 
-Hacking/IT appears in about 60% of breaches and network-server involvement in about 46%. Network-server incidents have a severe-breach rate of approximately 18.1% and the strongest categorical association with severity among the evaluated characteristics (Cramér's V ≈ .239).
+Under risk-focused weighting, the remaining capabilities ranked as follows:
 
-## Adjusted associations
+1. Monitoring and Detection — 4.65
+2. Network and Workload Security — 4.30
+3. IAM / Zero-Trust Access — 4.20
+4. Third-Party Access and Risk Governance — 4.15
+5. Incident Response and Recovery — 3.15
 
-Network-server involvement is associated with 3.49 times the adjusted odds of a severe breach (95% CI: 2.84–4.30). Business Associate entity type is associated with 3.55 times the adjusted odds relative to Healthcare Providers (95% CI: 2.70–4.66). These are observational associations and should not be interpreted as causal effects.
+The stability of Monitoring and Detection across both weighting approaches supports its position as the first capability priority.
 
-## Model validation
+## Financial Findings
 
-Held-out ROC-AUC is .776. Five-fold stratified cross-validation produces a mean ROC-AUC of .757 (SD = .012; range approximately .743–.773), with all folds converging. The results indicate moderate and reasonably stable discrimination.
+None of the primary investment scenarios produced positive five-year NPV or finite payback.
 
-## Security capability evaluation
+| Scenario | Five-Year NPV | Break-Even Risk Reduction |
+|---|---:|---:|
+| Low | **−$680,258** | 143.9% |
+| Expected | **−$1,248,899** | 171.4% |
+| High | **−$2,445,165** | 244.1% |
 
-Monitoring and Detection ranks first under both the equal-weight (4.50) and risk-focused (4.65) approaches. Under risk-focused weighting, Network and Workload Security ranks second, followed by IAM/Zero-Trust Access, Third-Party Access and Risk Governance, and Incident Response and Recovery.
+Break-even sensitivity showed that the financial conclusion changes materially with implementation cost. A **$100,000 initial investment with no annual operating cost required an 11.7% risk reduction to break even**.
 
-## Financial findings
+The financial result is therefore conditional rather than universal: feasibility depends on cost, organizational exposure, potential loss, and realistically achievable risk reduction.
 
-None of the primary scenarios produces positive five-year NPV or finite payback. Five-year NPV ranges from approximately -$680,000 in the low scenario to -$2.45 million in the high scenario.
+## Integrated Interpretation
 
-Sensitivity analysis shows why the financial conclusion is conditional rather than universal. At a $100,000 initial investment with no annual operating cost, the required risk reduction to break even falls to 11.7%. Financial feasibility also improves as assumed breach exposure and potential loss increase.
+The evidence supports a sequence beginning with Monitoring and Detection, followed by Network and Workload Security, IAM / Zero-Trust Access, and Third-Party Access and Risk Governance. Incident Response and Recovery operates across the sequence as a cross-cutting capability.
+
+The statistical model identifies associations, the security evaluation translates evidence into capability priorities, and the financial analysis tests whether those priorities are economically supportable under different assumptions.
