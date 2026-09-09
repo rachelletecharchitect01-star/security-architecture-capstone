@@ -23,7 +23,8 @@ The study connects statistical analysis of reported healthcare breaches with sec
 
 ## Data Source
 
-**U.S. Department of Health and Human Services, Office for Civil Rights (HHS OCR) Breach Portal**
+**U.S. Department of Health and Human Services, Office for Civil Rights (HHS OCR) Breach Portal**  
+[HHS OCR Breach Portal](https://ocrportal.hhs.gov/ocr/breach/breach_report_hip.jsf)
 
 ## Research Approach
 
