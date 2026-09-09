@@ -2,37 +2,42 @@
 
 **Using Public Breach Evidence, NIST Guidance, and Financial Decision Analysis**
 
-## Overview
+## Research Focus
 
-Healthcare organizations make security investment decisions under uncertainty. Public breach data can reveal patterns in reported incidents, but those patterns do not directly determine which security capabilities should be prioritized or whether an investment will be financially justified.
+Healthcare organizations make security investment decisions under uncertainty. This research examines how evidence from reported healthcare breaches can be used to identify characteristics associated with severe outcomes, translate those findings into security capability priorities, and evaluate the financial conditions under which security investments may be economically supportable.
 
-This applied business analytics project uses U.S. Department of Health and Human Services Office for Civil Rights (HHS OCR) breach data to connect statistical evidence with security and financial decision-making.
+## Research Questions
 
-The study asks three questions:
+1. **What patterns are present in the frequency and severity of reported healthcare breaches?**
+2. **What observable breach characteristics are associated with severe outcomes after adjustment for other characteristics?**
+3. **How can the empirical findings be mapped to security capabilities using NIST guidance?**
+4. **Which candidate security capabilities receive the strongest priority under the decision criteria, and how sensitive are those priorities to alternative weighting assumptions?**
+5. **Under what cost, exposure, loss, and risk-reduction assumptions do candidate security investments become financially supportable?**
+6. **How can the combined evidence inform a phased security investment roadmap?**
 
-1. **What characteristics are associated with severe reported healthcare breaches?**
-2. **How can those findings inform security capability priorities?**
-3. **Under what financial conditions do security investments become economically supportable?**
+## Data Source
 
-## Analytical Approach
+**U.S. Department of Health and Human Services, Office for Civil Rights (HHS OCR) Breach Portal**
+
+## Research Approach
 
 ```mermaid
 flowchart LR
-    A[HHS OCR Breach Data] --> B[Descriptive Analysis]
-    B --> C[Logistic Regression]
+    A[HHS OCR Data] --> B[Descriptive Analysis]
+    B --> C[Statistical Analysis]
     C --> D[Model Validation]
     D --> E[Security Capability Evaluation]
-    E --> F[Financial Analysis]
+    E --> F[Financial Decision Analysis]
     F --> G[Investment Roadmap]
 ```
 
-The project intentionally separates empirical analysis, security decision analysis, and financial analysis. Statistical associations are not interpreted as causal effects, and regression results are not treated as direct technology recommendations.
+The research separates statistical evidence from security and financial decision-making. Observed associations are not interpreted as causal effects, and statistical results are not treated as direct recommendations to purchase a particular technology.
 
-## Data Foundation
+## Analytical Methods
 
-The final analytical sample contains **7,877 reported breaches**, including **801 severe breaches (10.2%)**. A severe breach is defined in this study as one affecting at least **100,000 individuals**.
+The quantitative analysis uses descriptive statistics, categorical association testing, and multivariable logistic regression to examine severe reported breaches. Model performance and stability are evaluated using a stratified holdout sample and five-fold stratified cross-validation.
 
-The median breach affected approximately **4,000 individuals**, while the mean was approximately **136,399**, reflecting a strongly right-skewed distribution.
+The security decision analysis connects empirical findings with NIST guidance and evaluates candidate capabilities using multiple decision criteria and alternative weighting approaches. Financial analysis then examines annualized loss expectancy, avoided loss, net present value, payback, break-even conditions, and sensitivity to key assumptions.
 
 ## Key Findings
 
@@ -44,17 +49,17 @@ The logistic regression demonstrated moderate and stable discrimination, with a 
 
 None of the primary financial scenarios produced positive five-year NPV or finite payback. Sensitivity analysis showed that a **$100,000 initial investment with no annual operating cost required an 11.7% risk reduction to break even**.
 
-## Decision Logic
+## Evidence-to-Decision Logic
 
-| Analytical Layer | Decision Question |
+| Research Stage | Question Addressed |
 |---|---|
-| Breach analysis and regression | What characteristics are associated with severe outcomes? |
-| Model validation | Are the model results reasonably stable? |
-| Security capability evaluation | What capabilities deserve greater priority? |
-| Financial analysis | Under what conditions does the investment make financial sense? |
-| Roadmap | How can the priorities be sequenced? |
+| Descriptive and statistical analysis | What patterns and adjusted associations are present in the breach evidence? |
+| Model validation | Are the statistical results reasonably stable? |
+| Security capability evaluation | Which capabilities receive stronger priority based on the combined evidence and decision criteria? |
+| Financial analysis | Under what assumptions does an investment become financially supportable? |
+| Roadmap | How can the resulting priorities be sequenced? |
 
-## Roadmap
+## Investment Roadmap
 
 ```mermaid
 flowchart LR
@@ -67,14 +72,12 @@ flowchart LR
     E -.-> D
 ```
 
-The roadmap is a decision sequence rather than a universal implementation prescription. Investment scale and timing should be adapted to an organization's own exposure, implementation cost, operating requirements, and realistically achievable risk reduction.
+The roadmap represents a decision sequence rather than a universal implementation prescription. Investment scale and timing depend on organizational exposure, implementation cost, operating requirements, and realistically achievable risk reduction.
 
 ## Scope and Limitations
 
-HHS OCR records describe reported healthcare breaches and do not provide an organization-year denominator. The analysis therefore cannot estimate the annual probability that a particular healthcare organization will experience a breach.
-
-The severe-breach threshold of 100,000 affected individuals is study-defined. The observational design supports association rather than causal inference. Financial results depend on scenario assumptions because the public data do not contain complete organization-specific investment costs, losses, or control-effectiveness estimates.
+The research is based on reported healthcare breach events and does not estimate the annual probability that a particular healthcare organization will experience a breach. The observational design supports association rather than causal inference. Financial conclusions are scenario-dependent and should be interpreted within the assumptions used in the analysis.
 
 ## Standards and Guidance
 
-The security decision analysis is informed by **NIST Cybersecurity Framework 2.0**, **NIST SP 800-30**, **NIST SP 800-207**, and HHS OCR healthcare breach reporting data.
+The security decision analysis is informed by **NIST Cybersecurity Framework 2.0**, **NIST SP 800-30**, and **NIST SP 800-207**.
