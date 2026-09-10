@@ -1,35 +1,25 @@
-# Findings and Decision Interpretation
+# Key Findings
 
-## Security Capability Priorities
+## 1. Network-Server Breaches Were Strongly Associated with Severity
 
-Monitoring and Detection ranked first under both the equal-weight (**4.50**) and risk-focused (**4.65**) approaches.
+Network-server involvement had the strongest evaluated categorical association with severe-breach status and was associated with **3.49 times higher adjusted odds** of a severe breach, holding the other modeled characteristics constant.
 
-Under risk-focused weighting, the remaining capabilities ranked as follows:
+## 2. Business Associate Entity Type Was an Important Risk Indicator
 
-1. Monitoring and Detection — 4.65
-2. Network and Workload Security — 4.30
-3. IAM / Zero-Trust Access — 4.20
-4. Third-Party Access and Risk Governance — 4.15
-5. Incident Response and Recovery — 3.15
+Business Associate entities had **3.55 times higher adjusted odds** of a severe breach than Healthcare Providers after adjustment for the other modeled characteristics.
 
-The stability of Monitoring and Detection across both weighting approaches supports its position as the first capability priority.
+## 3. The Model Demonstrated Moderate and Stable Discrimination
 
-## Financial Findings
+Held-out **ROC-AUC was .776**. Five-fold stratified cross-validation produced a mean ROC-AUC of **.757 (SD = .012)**. These results support use of the model for risk stratification and interpretation rather than organization-specific breach prediction.
 
-None of the primary investment scenarios produced positive five-year NPV or finite payback.
+## 4. Monitoring and Detection Was the Most Consistent Security Priority
 
-| Scenario | Five-Year NPV | Break-Even Risk Reduction |
-|---|---:|---:|
-| Low | **−$680,258** | 143.9% |
-| Expected | **−$1,248,899** | 171.4% |
-| High | **−$2,445,165** | 244.1% |
+Monitoring and Detection ranked **first under both equal-weight and risk-focused scoring**. Network and Workload Security ranked second when greater weight was placed on risk evidence.
 
-Break-even sensitivity showed that the financial conclusion changes materially with implementation cost. A **$100,000 initial investment with no annual operating cost required an 11.7% risk reduction to break even**.
+## 5. Financial Feasibility Depended on Cost and Achievable Risk Reduction
 
-The financial result is therefore conditional rather than universal: feasibility depends on cost, organizational exposure, potential loss, and realistically achievable risk reduction.
+None of the primary scenarios produced positive five-year NPV or finite payback. Lower implementation costs materially improved the financial case. In the lowest-cost sensitivity scenario, a **$100,000 initial investment with no annual operating cost required an 11.7% risk reduction to break even**.
 
-## Integrated Interpretation
+## Overall Finding
 
-The evidence supports a sequence beginning with Monitoring and Detection, followed by Network and Workload Security, IAM / Zero-Trust Access, and Third-Party Access and Risk Governance. Incident Response and Recovery operates across the sequence as a cross-cutting capability.
-
-The statistical model identifies associations, the security evaluation translates evidence into capability priorities, and the financial analysis tests whether those priorities are economically supportable under different assumptions.
+The evidence supports prioritizing **Monitoring and Detection**, followed by **Network and Workload Security**, while evaluating implementation decisions separately based on **cost, organizational exposure, potential loss, and achievable risk reduction**.
