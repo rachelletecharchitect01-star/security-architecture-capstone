@@ -59,7 +59,7 @@ The research is organized as an evidence-to-decision process. Statistical analys
 
 The quantitative analysis uses descriptive statistics, categorical association analysis, and multivariable logistic regression. Model performance and stability are evaluated using a stratified holdout sample and five-fold stratified cross-validation.
 
-Security capabilities are evaluated using the statistical evidence, NIST guidance, and defined decision criteria. Alternative weighting approaches are used to examine whether priority rankings are sensitive to changes in the relative importance assigned to those criteria).
+Security capabilities are evaluated using the statistical evidence, NIST guidance, and defined decision criteria. Alternative weighting approaches are used to examine whether priority rankings are sensitive to changes in the relative importance assigned to those criteria.
 
 Financial decision analysis evaluates investment costs and expected avoided losses using annualized loss expectancy, net present value, payback, break-even analysis, and sensitivity analysis.
 
