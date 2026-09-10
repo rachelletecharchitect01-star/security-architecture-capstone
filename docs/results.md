@@ -65,6 +65,49 @@ $$
 
 The model converged successfully, and the maximum variance inflation factor was **2.72**, providing no indication of severe multicollinearity among the modeled predictors.
 
+### Estimated Logistic Regression Equation
+
+The estimated coefficients can be recovered from the reported adjusted odds ratios using $\beta_j=\ln(OR_j)$. Using the fitted predictor estimates, the model can be written in log-odds form as:
+
+$$
+\begin{aligned}
+\log\left(\frac{\hat p}{1-\hat p}\right)=\;&\beta_0
++0.702(\text{Improper Disposal})
+-0.499(\text{Loss})\\
+&-0.134(\text{Other/Multiple})
+-0.580(\text{Theft})
+-1.165(\text{Unauthorized})\\
+&+1.266(\text{BA Entity})
++0.035(\text{Health Plan})
++0.733(\text{Clearing House})\\
+&-0.536(\text{Desktop})
+-0.521(\text{EMR})
+-0.473(\text{Laptop})\\
+&+1.251(\text{Network Server})
+-1.423(\text{Paper})
+-0.562(\text{Portable Device})\\
+&-0.671(\text{Business Associate Present})
+\end{aligned}
+$$
+
+where $\hat p$ is the estimated probability that a reported breach meets the severe-breach threshold. Indicator variables equal 1 when the corresponding characteristic is present and 0 otherwise. **Hacking/IT Incident** is the breach-type reference category and **Healthcare Provider** is the covered-entity reference category.
+
+The intercept $\beta_0$ is left symbolic here because the reported results used for this summary provide the adjusted odds ratios but not the fitted intercept estimate. The equation therefore reports the estimated predictor effects without inventing an intercept value.
+
+For example, the network-server coefficient follows directly from its adjusted odds ratio:
+
+$$
+\beta_{Network}=\ln(3.493)=1.251
+$$
+
+and converting the coefficient back to the odds-ratio scale gives:
+
+$$
+e^{1.251}=3.49
+$$
+
+Thus, holding the other modeled characteristics constant, network-server involvement was associated with approximately **3.49 times the adjusted odds** of a severe breach.
+
 ### Adjusted Odds Ratios
 
 Because an adjusted odds ratio is calculated as $OR=e^{\beta}$, an OR greater than 1 represents higher adjusted odds relative to the reference category, while an OR below 1 represents lower adjusted odds.
@@ -76,8 +119,6 @@ Because an adjusted odds ratio is calculated as $OR=e^{\beta}$, an OR greater th
 | Unauthorized access/disclosure | **0.31** | 0.22–0.44 | <.001 | Lower adjusted odds |
 | Theft | **0.56** | 0.34–0.93 | .023 | Lower adjusted odds |
 | Paper | **0.24** | 0.12–0.50 | <.001 | Lower adjusted odds |
-
-For example, network-server involvement was associated with approximately **3.49 times the adjusted odds** of a severe breach, holding the other modeled characteristics constant.
 
 Covered Entity Type = Business Associate and Business Associate Present represent different predictors and should not be interpreted as interchangeable measures.
 
