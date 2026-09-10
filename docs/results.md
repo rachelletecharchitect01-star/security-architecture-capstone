@@ -65,52 +65,36 @@ $$
 
 The model converged successfully, and the maximum variance inflation factor was **2.72**, providing no indication of severe multicollinearity among the modeled predictors.
 
-### Estimated Logistic Regression Equation
+### Fitted Logistic Regression Equation
 
-The estimated coefficients can be recovered from the reported adjusted odds ratios using $\beta_j=\ln(OR_j)$. Using the fitted predictor estimates, the model can be written in log-odds form as:
+The fitted model coefficients from the analysis were:
 
 $$
 \begin{aligned}
-\log\left(\frac{\hat p}{1-\hat p}\right)=\;&\beta_0
-+0.702(\text{Improper Disposal})
--0.499(\text{Loss})\\
-&-0.134(\text{Other/Multiple})
--0.580(\text{Theft})
--1.165(\text{Unauthorized})\\
-&+1.266(\text{BA Entity})
-+0.035(\text{Health Plan})
-+0.733(\text{Clearing House})\\
-&-0.536(\text{Desktop})
--0.521(\text{EMR})
--0.473(\text{Laptop})\\
-&+1.251(\text{Network Server})
--1.423(\text{Paper})
--0.562(\text{Portable Device})\\
-&-0.671(\text{Business Associate Present})
+\log\left(\frac{\hat p}{1-\hat p}\right)=\;&-2.6708
++0.7018(\text{Improper Disposal})
+-0.4992(\text{Loss})\\
+&-0.1341(\text{Other/Multiple})
+-0.5793(\text{Theft})
+-1.1638(\text{Unauthorized})\\
+&+1.2659(\text{Business Associate Entity})
++0.0356(\text{Health Plan})\\
+&+0.7329(\text{Clearing House})
+-0.5353(\text{Desktop})
+-0.5201(\text{EMR})\\
+&-0.4727(\text{Laptop})
++1.2507(\text{Network Server})
+-1.4246(\text{Paper})\\
+&-0.5621(\text{Portable Device})
+-0.6721(\text{Business Associate Present})
 \end{aligned}
 $$
 
-where $\hat p$ is the estimated probability that a reported breach meets the severe-breach threshold. Indicator variables equal 1 when the corresponding characteristic is present and 0 otherwise. **Hacking/IT Incident** is the breach-type reference category and **Healthcare Provider** is the covered-entity reference category.
+where $\hat p$ is the fitted probability that a reported breach affected at least 100,000 individuals. Indicator variables equal 1 when the corresponding characteristic is present and 0 otherwise. **Hacking/IT** is the breach-type reference category and **Healthcare Provider** is the covered-entity reference category.
 
-The intercept $\beta_0$ is left symbolic here because the reported results used for this summary provide the adjusted odds ratios but not the fitted intercept estimate. The equation therefore reports the estimated predictor effects without inventing an intercept value.
-
-For example, the network-server coefficient follows directly from its adjusted odds ratio:
-
-$$
-\beta_{Network}=\ln(3.493)=1.251
-$$
-
-and converting the coefficient back to the odds-ratio scale gives:
-
-$$
-e^{1.251}=3.49
-$$
-
-Thus, holding the other modeled characteristics constant, network-server involvement was associated with approximately **3.49 times the adjusted odds** of a severe breach.
+The fitted intercept was **−2.6708**. The coefficient for network-server involvement was **1.2507**, corresponding to an adjusted odds ratio of $e^{1.2507}=3.49$. The coefficient for Business Associate entity type was **1.2659**, corresponding to an adjusted odds ratio of approximately **3.55**. Negative coefficients indicate lower adjusted log-odds relative to the applicable reference category or absence of the indicator, holding the other modeled variables constant.
 
 ### Adjusted Odds Ratios
-
-Because an adjusted odds ratio is calculated as $OR=e^{\beta}$, an OR greater than 1 represents higher adjusted odds relative to the reference category, while an OR below 1 represents lower adjusted odds.
 
 | Predictor | Adjusted OR | 95% CI | p-value | Interpretation |
 |---|---:|---:|---:|---|
@@ -235,7 +219,7 @@ The financial analysis used the formulas defined in the Methods to evaluate annu
 | Expected | $177,314 | $44,329 | −$155,671 | **−$1,248,899** | **171.4%** |
 | High | $248,994 | $99,598 | −$300,402 | **−$2,445,165** | **244.1%** |
 
-For example, in the expected scenario:
+In the expected scenario:
 
 $$
 ALE=0.235\times0.1016885\times\$7.42M\approx\$177{,}314
