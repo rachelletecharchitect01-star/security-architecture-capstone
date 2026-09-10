@@ -57,42 +57,9 @@ $$
 LR\;\chi^2=692.98,\qquad p<.001
 $$
 
-with:
+with **McFadden pseudo-R² = .134**. The model converged successfully, and the maximum variance inflation factor was **2.72**, indicating no evidence of severe multicollinearity among the modeled predictors.
 
-$$
-\text{McFadden pseudo-}R^2=0.134
-$$
-
-The model converged successfully, and the maximum variance inflation factor was **2.72**, providing no indication of severe multicollinearity among the modeled predictors.
-
-### Fitted Logistic Regression Equation
-
-The fitted model coefficients from the analysis were:
-
-$$
-\begin{aligned}
-\log\left(\frac{\hat p}{1-\hat p}\right)=\;&-2.6708
-+0.7018(\text{Improper Disposal})
--0.4992(\text{Loss})\\
-&-0.1341(\text{Other/Multiple})
--0.5793(\text{Theft})
--1.1638(\text{Unauthorized})\\
-&+1.2659(\text{Business Associate Entity})
-+0.0356(\text{Health Plan})\\
-&+0.7329(\text{Clearing House})
--0.5353(\text{Desktop})
--0.5201(\text{EMR})\\
-&-0.4727(\text{Laptop})
-+1.2507(\text{Network Server})
--1.4246(\text{Paper})\\
-&-0.5621(\text{Portable Device})
--0.6721(\text{Business Associate Present})
-\end{aligned}
-$$
-
-where $\hat p$ is the fitted probability that a reported breach affected at least 100,000 individuals. Indicator variables equal 1 when the corresponding characteristic is present and 0 otherwise. **Hacking/IT** is the breach-type reference category and **Healthcare Provider** is the covered-entity reference category.
-
-The fitted intercept was **−2.6708**. The coefficient for network-server involvement was **1.2507**, corresponding to an adjusted odds ratio of $e^{1.2507}=3.49$. The coefficient for Business Associate entity type was **1.2659**, corresponding to an adjusted odds ratio of approximately **3.55**. Negative coefficients indicate lower adjusted log-odds relative to the applicable reference category or absence of the indicator, holding the other modeled variables constant.
+The fitted model included breach type, covered-entity type, information-location indicators, and business-associate involvement. Hacking/IT served as the breach-type reference category and Healthcare Provider as the covered-entity reference category. Rather than reproducing the full coefficient equation in the results narrative, the fitted effects are reported in their more interpretable adjusted odds-ratio form below.
 
 ### Adjusted Odds Ratios
 
@@ -104,7 +71,9 @@ The fitted intercept was **−2.6708**. The coefficient for network-server invol
 | Theft | **0.56** | 0.34–0.93 | .023 | Lower adjusted odds |
 | Paper | **0.24** | 0.12–0.50 | <.001 | Lower adjusted odds |
 
-Covered Entity Type = Business Associate and Business Associate Present represent different predictors and should not be interpreted as interchangeable measures.
+Network-server involvement was associated with approximately **3.49 times the adjusted odds** of a severe breach, holding the other modeled characteristics constant. Business Associate entity type was similarly associated with higher adjusted odds (**OR = 3.55**). Unauthorized access/disclosure, theft, and paper involvement were associated with lower adjusted odds relative to their applicable reference categories or indicator absence.
+
+Covered Entity Type = Business Associate and Business Associate Present represent different predictors and should not be interpreted as interchangeable measures. The reported coefficients and odds ratios represent adjusted observational associations, not causal effects.
 
 ## Holdout Validation Results
 
