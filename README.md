@@ -29,13 +29,28 @@ The study connects statistical analysis of reported healthcare breaches with sec
 ## Research Approach
 
 ```mermaid
-flowchart LR
-    A[Healthcare Breach Data] --> B[Breach Analysis]
-    B --> C[Statistical Modeling]
-    C --> D[Model Validation]
+flowchart TB
+    A([Healthcare Breach Data]) --> B[Descriptive & Association Analysis]
+    B --> C[Multivariable Logistic Regression]
+    C --> D{Model Validation}
     D --> E[Security Capability Evaluation]
     E --> F[Financial Decision Analysis]
-    F --> G[Investment Roadmap]
+    F --> G([Phased Investment Roadmap])
+
+    N[NIST Guidance] -. informs .-> E
+    S[Scenario Assumptions] -. informs .-> F
+
+    classDef source fill:#E8F3FF,stroke:#2563EB,stroke-width:2px,color:#0F172A;
+    classDef analysis fill:#F5F3FF,stroke:#7C3AED,stroke-width:2px,color:#0F172A;
+    classDef decision fill:#ECFDF5,stroke:#059669,stroke-width:2px,color:#0F172A;
+    classDef support fill:#FFF7ED,stroke:#EA580C,stroke-width:1.5px,color:#0F172A;
+    classDef outcome fill:#F0FDFA,stroke:#0F766E,stroke-width:3px,color:#0F172A;
+
+    class A source;
+    class B,C,D analysis;
+    class E,F decision;
+    class N,S support;
+    class G outcome;
 ```
 
 The research is organized as an evidence-to-decision process. Statistical analysis is first used to identify patterns and adjusted associations in reported breach data. The empirical evidence is then considered alongside NIST guidance to evaluate security capabilities. Financial analysis provides a separate assessment of the conditions under which candidate investments may be economically supportable.
@@ -44,7 +59,7 @@ The research is organized as an evidence-to-decision process. Statistical analys
 
 The quantitative analysis uses descriptive statistics, categorical association analysis, and multivariable logistic regression. Model performance and stability are evaluated using a stratified holdout sample and five-fold stratified cross-validation.
 
-Security capabilities are evaluated using the statistical evidence, NIST guidance, and defined decision criteria. Alternative weighting approaches are used to examine whether priority rankings are sensitive to changes in the relative importance assigned to those criteria.
+Security capabilities are evaluated using the statistical evidence, NIST guidance, and defined decision criteria. Alternative weighting approaches are used to examine whether priority rankings are sensitive to changes in the relative importance assigned to those criteria).
 
 Financial decision analysis evaluates investment costs and expected avoided losses using annualized loss expectancy, net present value, payback, break-even analysis, and sensitivity analysis.
 
