@@ -4,4 +4,7 @@ scipy
 statsmodels
 scikit-learn
 matplotlib
+seaborn
+openpyxl
+jinja2
 jupyter

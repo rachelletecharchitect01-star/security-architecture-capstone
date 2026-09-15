@@ -1888,14 +1888,11 @@ whether multicollinearity is likely to affect coefficient stability.
 
 from statsmodels.stats.outliers_influence import variance_inflation_factor
 
-design_matrix = pd.get_dummies(
-    logit_data.drop(columns=["Large_Breach_100K"]),
-    columns=[
-        "Breach_Type_Model",
-        "Covered_Entity_Type",
-    ],
-    drop_first=True,
-    dtype=float,
+# Reuse the fitted model matrix, including its intercept, so VIF values
+# correspond exactly to the predictors used by the logistic model.
+design_matrix = pd.DataFrame(
+    logit_model.model.exog,
+    columns=logit_model.model.exog_names,
 )
 
 vif_results = pd.DataFrame({
@@ -2875,7 +2872,9 @@ equal_weight_ranking = (
 equal_weight_ranking.insert(
     0,
     "Rank",
-    np.arange(1, len(equal_weight_ranking) + 1),
+    equal_weight_ranking["Score"]
+    .rank(method="min", ascending=False)
+    .astype(int),
 )
 
 display(
