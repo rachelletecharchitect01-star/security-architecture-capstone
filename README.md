@@ -49,7 +49,7 @@ flowchart TB
     classDef outcome fill:#F0FDFA,stroke:#0F766E,stroke-width:3px,color:#0F172A;
 
     class A source;
-    class B,C,D analysis;
+    class B,C,D,X analysis;
     class E,F decision;
     class N,S support;
     class G outcome;
