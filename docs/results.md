@@ -31,6 +31,22 @@ Selected severe-breach rates were:
 
 The annual severe-breach rate reached **20.27% in 2023**, followed by **16.73% in 2024** and **12.03% in 2025**. The 2026 value of **8.16%** is based on incomplete-year data and should not be interpreted as a complete annual estimate.
 
+## Exploratory Breach-Profile Clustering
+
+A reproducible K-means analysis explored recurring breach profiles using breach-type indicators, information-location indicators, covered-entity type, business-associate involvement, and standardized submission year. Breach size and severe-breach status were excluded from cluster formation so they could be examined as outcomes.
+
+Five clusters were selected because the five-cluster solution produced the highest evaluated silhouette coefficient (**0.390**) among candidate solutions containing two through six clusters.
+
+| Cluster profile | Breaches | Percent of sample | Median affected | Severe breaches | Severe rate |
+|---|---:|---:|---:|---:|---:|
+| Provider Hacking and Network-Server Breaches | 3,484 | 44.23% | 8,290 | 468 | 13.43% |
+| Business-Associate Hacking and Network-Server Breaches | 1,210 | 15.36% | 5,730 | 215 | **17.77%** |
+| Provider Unauthorized-Access Breaches | 1,084 | 13.76% | 1,648 | 20 | 1.85% |
+| Health-Plan Mixed Digital Breaches | 943 | 11.97% | 3,070 | 75 | 7.95% |
+| Provider Theft and Physical-Record Breaches | 1,156 | 14.68% | 1,887 | 23 | 1.99% |
+
+The business-associate hacking and network-server profile had the highest severe-breach rate. These clusters are descriptive segments rather than causal groups or supervised predictions.
+
 ## Categorical Association Results
 
 Pearson chi-square tests evaluated whether breach characteristics were associated with severe-breach status, while Cramér's V summarized the strength of those relationships.
@@ -161,6 +177,18 @@ SD_{AUC}=0.0124\approx0.012
 $$
 
 The range was **.743–.773**, and all five folds converged. The relatively small variation across folds supports stable discrimination across the resampled training subsets. This is an internal stability assessment rather than external validation.
+
+## Supplementary KNIME Validation
+
+A separate KNIME workflow provided a visual, independently implemented benchmark using the same 80/20 stratified training and holdout design. Because preprocessing and model settings were implemented separately, these results are treated as corroborating evidence rather than an exact reproduction of the Python model.
+
+| Model and threshold | ROC-AUC | Sensitivity | Specificity | Precision | Accuracy |
+|---|---:|---:|---:|---:|---:|
+| KNIME logistic regression, default 0.50 | .753 | .000 | 1.000 | — | .898 |
+| KNIME logistic regression, risk threshold 0.1106 | .753 | .750 | .626 | .185 | .638 |
+| Pruned decision tree, default | .690 | .000 | 1.000 | — | .898 |
+
+At the risk-sensitive threshold, KNIME logistic regression identified **120 of 160 severe breaches**, with **530 false-positive alerts**. The pruned tree retained one split on network-server involvement but classified every holdout observation as non-severe at its default operating rule. The KNIME comparison supports the direction and interpretability of the primary findings; the reproducible Python analysis remains authoritative.
 
 ## Security Capability Evaluation
 
