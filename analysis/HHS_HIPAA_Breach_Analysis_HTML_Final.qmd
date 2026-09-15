@@ -179,7 +179,6 @@ def format_p_value(value):
     return "<0.0001" if float(value) < 0.0001 else f"{float(value):.4f}"
 
 data_candidates = [
-    Path("../data/hhs_hipaa_breach_modeling_data_2009_2026.csv"),
     Path("HHS_HIPAA_Breach_Modeling_Dataset_2009-2026.xlsx"),
     *sorted(Path(".").glob("HHS_HIPAA_Breach_Modeling_Dataset_2009-2026*.xlsx")),
 ]
@@ -191,16 +190,13 @@ file_path = next(
 
 if file_path is None:
     raise FileNotFoundError(
-        "Add the repository CSV under ../data or place the modeling workbook beside this Quarto file."
+        "Place the HHS HIPAA modeling workbook beside this Quarto file."
     )
 
-if file_path.suffix.lower() == ".csv":
-    raw_data = pd.read_csv(file_path)
-else:
-    raw_data = pd.read_excel(
-        file_path,
-        sheet_name="Modeling_Data",
-    )
+raw_data = pd.read_excel(
+    file_path,
+    sheet_name="Modeling_Data",
+)
 
 data = raw_data.drop(
     columns=["Unnamed: 0"],
@@ -1888,11 +1884,14 @@ whether multicollinearity is likely to affect coefficient stability.
 
 from statsmodels.stats.outliers_influence import variance_inflation_factor
 
-# Reuse the fitted model matrix, including its intercept, so VIF values
-# correspond exactly to the predictors used by the logistic model.
-design_matrix = pd.DataFrame(
-    logit_model.model.exog,
-    columns=logit_model.model.exog_names,
+design_matrix = pd.get_dummies(
+    logit_data.drop(columns=["Large_Breach_100K"]),
+    columns=[
+        "Breach_Type_Model",
+        "Covered_Entity_Type",
+    ],
+    drop_first=True,
+    dtype=float,
 )
 
 vif_results = pd.DataFrame({
@@ -2872,9 +2871,7 @@ equal_weight_ranking = (
 equal_weight_ranking.insert(
     0,
     "Rank",
-    equal_weight_ranking["Score"]
-    .rank(method="min", ascending=False)
-    .astype(int),
+    np.arange(1, len(equal_weight_ranking) + 1),
 )
 
 display(

@@ -1,4 +1,4 @@
-# Healthcare Cybersecurity Architecture Investments
+# Healthcare Security Architecture Investments
 
 **Using Public Breach Evidence, NIST Guidance, and Financial Decision Analysis**
 
@@ -31,9 +31,7 @@ The study connects statistical analysis of reported healthcare breaches with sec
 ```mermaid
 flowchart TB
     A([Healthcare Breach Data]) --> B[Descriptive & Association Analysis]
-    B --> X[Exploratory Clustering]
     B --> C[Multivariable Logistic Regression]
-    X --> E
     C --> D{Model Validation}
     D --> E[Security Capability Evaluation]
     E --> F[Financial Decision Analysis]
@@ -49,7 +47,7 @@ flowchart TB
     classDef outcome fill:#F0FDFA,stroke:#0F766E,stroke-width:3px,color:#0F172A;
 
     class A source;
-    class B,C,D,X analysis;
+    class B,C,D analysis;
     class E,F decision;
     class N,S support;
     class G outcome;
@@ -59,7 +57,7 @@ The research is organized as an evidence-to-decision process. Statistical analys
 
 ## Methods
 
-The quantitative analysis uses descriptive statistics, categorical association analysis, exploratory clustering, and multivariable logistic regression. Model performance and stability are evaluated using a stratified holdout sample and five-fold stratified cross-validation.
+The quantitative analysis uses descriptive statistics, categorical association analysis, and multivariable logistic regression. Model performance and stability are evaluated using a stratified holdout sample and five-fold stratified cross-validation.
 
 Security capabilities are evaluated using the statistical evidence, NIST guidance, and defined decision criteria. Alternative weighting approaches are used to examine whether priority rankings are sensitive to changes in the relative importance assigned to those criteria.
 
