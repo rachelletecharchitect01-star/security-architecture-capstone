@@ -4,7 +4,7 @@ This directory contains the reproducible computational workflow used for the stu
 
 ## Primary Analysis
 
-[`healthcare_breach_analysis.qmd`](./healthcare_breach_analysis.qmd)
+[`HHS_HIPAA_Breach_Analysis.qmd`](./HHS_HIPPA_Breach_Analysis.qmd)
 
 The Quarto document keeps the Python code, analytical outputs, figures, and concise interpretation in one executable research file.
 
