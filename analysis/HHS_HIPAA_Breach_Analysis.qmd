@@ -26,7 +26,7 @@ format:
     tbl-cap-location: top
     link-external-newwindow: true
     anchor-sections: true
-    html-math-method: mathjax
+    html-math-method: mathml
     include-in-header:
       text: |
         <style>
@@ -99,6 +99,20 @@ format:
           }
           .cell-output-display {
             overflow-x: auto;
+          }
+          table.regression-table {
+            font-variant-numeric: tabular-nums;
+            min-width: 620px;
+          }
+          table.regression-table tbody td:nth-child(-n+2) {
+            text-align: left !important;
+          }
+          table.regression-table tbody td:nth-child(n+3) {
+            text-align: right !important;
+            white-space: nowrap;
+          }
+          table.regression-table tbody tr.group-start td {
+            border-top: 2px solid var(--report-blue) !important;
           }
           .sourceCode {
             font-size: 0.88rem;
@@ -178,10 +192,21 @@ def format_p_value(value):
     """Format p-values consistently for publication tables."""
     return "<0.0001" if float(value) < 0.0001 else f"{float(value):.4f}"
 
-data_candidates = [
-    Path("HHS_HIPAA_Breach_Modeling_Dataset_2009-2026.xlsx"),
-    *sorted(Path(".").glob("HHS_HIPAA_Breach_Modeling_Dataset_2009-2026*.xlsx")),
+search_roots = [
+    Path.cwd(),
+    Path.cwd().parent,
 ]
+
+# The workspace contains the modeling data as a CSV in the project root, while some
+# copies of the report expect the original Excel workbook name.
+data_candidates = []
+for root in search_roots:
+    data_candidates.extend([
+        root / "HHS_HIPAA_Breach_Modeling_Dataset_2009-2026.xlsx",
+        root / "hhs_hipaa_breach_modeling_data_2009_2026.csv",
+        *sorted(root.glob("HHS_HIPAA_Breach_Modeling_Dataset_2009-2026*.xlsx")),
+        *sorted(root.glob("hhs_hipaa_breach_modeling_data_2009_2026*.csv")),
+    ])
 
 file_path = next(
     (candidate for candidate in data_candidates if candidate.exists()),
@@ -190,13 +215,16 @@ file_path = next(
 
 if file_path is None:
     raise FileNotFoundError(
-        "Place the HHS HIPAA modeling workbook beside this Quarto file."
+        "Place the HHS HIPAA modeling workbook or CSV in the project root."
     )
 
-raw_data = pd.read_excel(
-    file_path,
-    sheet_name="Modeling_Data",
-)
+if file_path.suffix.lower() == ".csv":
+    raw_data = pd.read_csv(file_path)
+else:
+    raw_data = pd.read_excel(
+        file_path,
+        sheet_name="Modeling_Data",
+    )
 
 data = raw_data.drop(
     columns=["Unnamed: 0"],
@@ -343,8 +371,8 @@ Y_i =
 \end{cases}
 $$
 
-where \(A_i\) represents the number of individuals affected by reported breach
-\(i\).
+where $A_i$ represents the number of individuals affected by reported breach
+$i$.
 
 The severe-breach indicator is independently recalculated from
 `Individuals_Affected` and compared with the existing outcome field as a data
@@ -786,7 +814,7 @@ display(
 ## Chi-Square Tests
 
 Chi-square tests evaluate whether severe-breach status is associated with each
-binary breach characteristic. Cramér's \(V\) is reported as an effect-size
+binary breach characteristic. Cramér's $V$ is reported as an effect-size
 measure.
 
 ```{python}
@@ -1168,7 +1196,7 @@ inertia and the silhouette coefficient. Inertia measures within-cluster
 dispersion, while the silhouette coefficient describes how closely each record
 matches its assigned cluster relative to neighboring clusters.
 
-The silhouette coefficient ranges from \(-1\) to \(1\), with larger values
+The silhouette coefficient ranges from $-1$ to $1$, with larger values
 indicating clearer separation. Because this is an exploratory analysis, the
 selected solution should balance quantitative separation with substantive
 interpretability.
@@ -1626,7 +1654,7 @@ display(
 )
 ```
 
-The five-cluster solution produced a silhouette coefficient of \(0.390\),
+The five-cluster solution produced a silhouette coefficient of $0.390$,
 indicating moderate separation among the exploratory breach profiles. The
 clusters primarily distinguish covered entity type, breach mechanism,
 information location, and business-associate involvement.
@@ -1805,13 +1833,9 @@ remaining multiple-type combinations, are grouped as Other / Multiple.
 
 ## Model Specification
 
-A multivariable logistic regression estimates the adjusted association between
-observable breach characteristics and the probability that a reported breach
-is severe. The outcome equals 1 when at least 100,000 individuals are affected
-and 0 otherwise.
-
-The model includes mutually exclusive breach type, covered entity type,
-information-location indicators, and business-associate involvement.
+The outcome is 1 for breaches affecting at least 100,000 people. Predictors
+include breach type, entity type, information location, and business-associate
+involvement.
 
 $$
 \operatorname{logit}\left[P(Y_i=1)\right]
@@ -1821,8 +1845,9 @@ $$
 \sum_{j=1}^{p}\beta_j X_{ij}
 $$
 
-where \(Y_i\) indicates severe-breach status and \(X_{ij}\) represents the
-included breach characteristics.
+Here $Y_i$ is severe-breach status and $X_{ij}$ are the predictors. Tables 11–13
+use all 7,877 records for adjusted associations; Section 7 refits the model on
+training data to evaluate the holdout.
 
 ```{python}
 #| label: fit-logistic-model
@@ -1863,13 +1888,115 @@ logit_model = smf.logit(
     data=logit_data,
 ).fit(disp=False)
 
-print(f"Model observations: {int(logit_model.nobs):,}")
-print(f"Converged: {logit_model.mle_retvals['converged']}")
-print(f"McFadden pseudo-R²: {logit_model.prsquared:.4f}")
-print(f"Log-likelihood: {logit_model.llf:.3f}")
-print(f"Null log-likelihood: {logit_model.llnull:.3f}")
-print(f"Likelihood-ratio p-value: {logit_model.llr_pvalue:.4g}")
+# print(f"Model observations: {int(logit_model.nobs):,}")
+# print(f"Converged: {logit_model.mle_retvals['converged']}")
+# print(f"McFadden pseudo-R²: {logit_model.prsquared:.4f}")
+# print(f"Log-likelihood: {logit_model.llf:.3f}")
+# print(f"Null log-likelihood: {logit_model.llnull:.3f}")
+# print(f"Likelihood-ratio p-value: {logit_model.llr_pvalue:.4g}")
+
 ```
+
+```{python}
+#| label: tbl-logistic-model-summary
+#| tbl-cap: "Logistic-regression specification and coefficient estimates"
+#| echo: false
+
+predictor_labels = {
+    "C(Breach_Type_Model, Treatment(reference='Hacking/IT'))[T.Improper Disposal]":
+        "Improper disposal vs Hacking/IT",
+    "C(Breach_Type_Model, Treatment(reference='Hacking/IT'))[T.Loss]":
+        "Loss vs Hacking/IT",
+    "C(Breach_Type_Model, Treatment(reference='Hacking/IT'))[T.Other / Multiple]":
+        "Other or multiple types vs Hacking/IT",
+    "C(Breach_Type_Model, Treatment(reference='Hacking/IT'))[T.Theft]":
+        "Theft vs Hacking/IT",
+    "C(Breach_Type_Model, Treatment(reference='Hacking/IT'))[T.Unauthorized]":
+        "Unauthorized access/disclosure vs Hacking/IT",
+    "C(Covered_Entity_Type, Treatment(reference='Healthcare Provider'))[T.Business Associate]":
+        "Business associate vs Healthcare provider",
+    "C(Covered_Entity_Type, Treatment(reference='Healthcare Provider'))[T.Health Plan]":
+        "Health plan vs Healthcare provider",
+    "C(Covered_Entity_Type, Treatment(reference='Healthcare Provider'))[T.Healthcare Clearing House]":
+        "Healthcare clearinghouse vs Healthcare provider",
+    "Location_Desktop": "Desktop involved: Yes vs No",
+    "Location_EMR": "Electronic medical record involved: Yes vs No",
+    "Location_Laptop": "Laptop involved: Yes vs No",
+    "Location_Network_Server": "Network server involved: Yes vs No",
+    "Location_Paper": "Paper records involved: Yes vs No",
+    "Location_Portable_Device": "Portable device involved: Yes vs No",
+    "Business_Associate_Yes": "Business associate involved: Yes vs No",
+}
+
+model_summary = pd.DataFrame({
+    "Item": [
+        "Outcome",
+        "Severe-breach definition",
+        "Analytic records",
+        "Severe breaches",
+        "Predictors",
+        "Estimation",
+    ],
+    "Specification": [
+        "Severe breach (1) vs non-severe breach (0)",
+        "At least 100,000 individuals affected",
+        f"{int(logit_model.nobs):,}",
+        f"{int(logit_data['Large_Breach_100K'].sum()):,} "
+        f"({logit_data['Large_Breach_100K'].mean():.1%})",
+        "Breach type; covered-entity type; information location; "
+        "business-associate involvement",
+        "Multivariable logistic regression, maximum likelihood",
+    ],
+})
+
+display(
+    model_summary.style.hide(axis="index")
+    .set_caption("Panel A. Model specification and analytic sample")
+    .set_table_attributes('class="regression-table"')
+)
+
+coefficient_limits = logit_model.conf_int()
+coefficient_terms = list(logit_model.params.index)
+coefficient_groups = (
+    ["Baseline"] + ["Breach type"] * 5 + ["Covered entity"] * 3
+    + ["Information location"] * 6 + ["BA involvement"]
+)
+assert len(coefficient_terms) == len(coefficient_groups)
+
+coefficient_table = pd.DataFrame({
+    "Group": coefficient_groups,
+    "Comparison": [
+        "Intercept (reference profile)" if term == "Intercept"
+        else predictor_labels.get(term, term)
+        for term in coefficient_terms
+    ],
+    "β (SE)": [
+        f"{logit_model.params[term]:.3f} ({logit_model.bse[term]:.3f})"
+        for term in coefficient_terms
+    ],
+    "95% CI for β": [
+        f"{coefficient_limits.loc[term, 0]:.3f} to "
+        f"{coefficient_limits.loc[term, 1]:.3f}"
+        for term in coefficient_terms
+    ],
+    "z": [f"{logit_model.tvalues[term]:.2f}" for term in coefficient_terms],
+    "p value": [
+        format_p_value(logit_model.pvalues[term])
+        for term in coefficient_terms
+    ],
+})
+
+display(
+    coefficient_table.style.hide(axis="index")
+    .set_caption("Panel B. Coefficients on the log-odds scale")
+    .set_table_attributes('class="regression-table"')
+)
+
+```
+
+*Note.* Coefficients are log odds for the full sample. The intercept uses the
+reference categories with binary indicators absent. Table 12 gives adjusted
+odds ratios.
 
 ## Variance Inflation Factor
 
@@ -1917,14 +2044,21 @@ model.
 
 ## Adjusted Odds Ratios
 
-Logistic-regression coefficients are exponentiated to obtain adjusted odds
-ratios. An odds ratio above 1 indicates higher adjusted odds of a severe breach,
-while an odds ratio below 1 indicates lower adjusted odds relative to the
-applicable reference category or indicator-absent group.
+Exponentiating a coefficient gives its adjusted odds ratio (aOR). Values above
+1 indicate higher odds; values below 1 indicate lower odds relative to the
+reference or absent group.
+
+$$
+\widehat{\mathrm{aOR}}_j=e^{\hat\beta_j},\qquad
+95\%\ \mathrm{CI}_j=\left[e^{L_j},e^{U_j}\right],
+$$
+
+Here $L_j$ and $U_j$ are coefficient confidence limits. Odds ratios are not
+probability changes.
 
 ```{python}
 #| label: tbl-adjusted-odds-ratios
-#| tbl-cap: "Adjusted odds ratios for severe-breach status"
+#| tbl-cap: "Adjusted odds ratios for a severe breach (full analytic sample)"
 #| echo: false
 
 confidence_intervals = logit_model.conf_int()
@@ -1943,68 +2077,53 @@ odds_ratio_table = (
     .reset_index(drop=True)
 )
 
-predictor_labels = {
-    "C(Breach_Type_Model, Treatment(reference='Hacking/IT'))[T.Improper Disposal]":
-        "Improper disposal vs Hacking/IT",
-    "C(Breach_Type_Model, Treatment(reference='Hacking/IT'))[T.Loss]":
-        "Loss vs Hacking/IT",
-    "C(Breach_Type_Model, Treatment(reference='Hacking/IT'))[T.Other / Multiple]":
-        "Other or multiple types vs Hacking/IT",
-    "C(Breach_Type_Model, Treatment(reference='Hacking/IT'))[T.Theft]":
-        "Theft vs Hacking/IT",
-    "C(Breach_Type_Model, Treatment(reference='Hacking/IT'))[T.Unauthorized]":
-        "Unauthorized access/disclosure vs Hacking/IT",
-    "C(Covered_Entity_Type, Treatment(reference='Healthcare Provider'))[T.Business Associate]":
-        "Business associate vs Healthcare provider",
-    "C(Covered_Entity_Type, Treatment(reference='Healthcare Provider'))[T.Health Plan]":
-        "Health plan vs Healthcare provider",
-    "C(Covered_Entity_Type, Treatment(reference='Healthcare Provider'))[T.Healthcare Clearing House]":
-        "Healthcare clearinghouse vs Healthcare provider",
-    "Location_Desktop": "Desktop involved: Yes vs No",
-    "Location_EMR": "Electronic medical record involved: Yes vs No",
-    "Location_Laptop": "Laptop involved: Yes vs No",
-    "Location_Network_Server": "Network server involved: Yes vs No",
-    "Location_Paper": "Paper records involved: Yes vs No",
-    "Location_Portable_Device": "Portable device involved: Yes vs No",
-    "Business_Associate_Yes": "Business associate involved: Yes vs No",
-}
-
 odds_ratio_table["Predictor"] = (
     odds_ratio_table["Predictor"]
     .replace(predictor_labels)
 )
 
-odds_ratio_table["Significant at 0.05"] = (
-    odds_ratio_table["P-Value"] < 0.05
-).map({True: "Yes", False: "No"})
+odds_ratio_table["Group"] = (
+    ["Breach type"] * 5
+    + ["Covered entity"] * 3
+    + ["Information location"] * 6
+    + ["BA involvement"]
+)
+odds_ratio_table["Adjusted OR (95% CI)"] = odds_ratio_table.apply(
+    lambda row: (
+        f"{row['Adjusted Odds Ratio']:.3f} "
+        f"({row['95% CI Lower']:.3f}–{row['95% CI Upper']:.3f})"
+    ),
+    axis=1,
+)
+odds_ratio_table["P-Value"] = odds_ratio_table["P-Value"].map(format_p_value)
+
+publication_or_table = odds_ratio_table[
+    ["Group", "Predictor", "Adjusted OR (95% CI)", "P-Value"]
+].rename(columns={"Predictor": "Comparison", "P-Value": "p value"})
 
 display(
-    odds_ratio_table.style
-    .format({
-        "Adjusted Odds Ratio": "{:.3f}",
-        "95% CI Lower": "{:.3f}",
-        "95% CI Upper": "{:.3f}",
-        "P-Value": format_p_value,
-    })
-    .hide(axis="index")
+    publication_or_table.style.hide(axis="index")
+    .set_table_attributes('class="regression-table"')
 )
 ```
 
-Several adjusted associations are especially relevant to the architecture
-analysis. Network-server involvement is associated with substantially higher
-odds of a severe breach, while paper records are associated with lower odds.
-Covered entities classified as business associates also show higher adjusted
-odds relative to healthcare providers. These estimates represent associations
-within the reported breach data and should not be interpreted as causal effects.
+*Note.* References are Hacking/IT and healthcare provider; indicators compare
+present with absent. Business-associate entity type and involvement are separate
+fields. Intervals and $p$ values are unadjusted for multiple tests. Associations
+among reported breaches are not causal or organization-level risk estimates.
+
+Network-server involvement and business-associate entity type have higher
+adjusted odds of severe status; paper location has lower adjusted odds. These
+are associations, not control effects.
 
 ## Model Fit and Statistical Significance
 
-Model fit is summarized using the log-likelihood, McFadden pseudo-\(R^2\), and
+Model fit is summarized using the log-likelihood, McFadden pseudo-$R^2$, and
 likelihood-ratio test.
 
 ```{python}
 #| label: tbl-model-fit
-#| tbl-cap: "Logistic-regression model fit"
+#| tbl-cap: "Fit of the full-sample logistic regression"
 #| echo: false
 
 model_fit = pd.DataFrame({
@@ -2031,8 +2150,8 @@ model_fit = pd.DataFrame({
 display(model_fit.style.hide(axis="index"))
 ```
 
-The likelihood-ratio test evaluates improvement over the intercept-only model.
-McFadden pseudo-\(R^2\) is not interpreted as variance explained.
+The likelihood-ratio test compares the model with an intercept-only fit.
+McFadden pseudo-$R^2$ is not variance explained or test-set performance.
 
 ## In-Sample Classification Diagnostics
 
@@ -2106,7 +2225,7 @@ below.
 ## Threshold Analysis
 
 Because the severe-breach outcome is imbalanced, the conventional 0.50 cutoff
-is compared with a threshold selected using Youden's \(J\) statistic.
+is compared with a threshold selected using Youden's $J$ statistic.
 
 $$
 J = \text{Sensitivity} + \text{Specificity} - 1
@@ -2205,7 +2324,7 @@ display(
 
 ```{python}
 #| label: tbl-threshold-comparison
-#| tbl-cap: "Comparison of conventional and Youden-selected thresholds"
+#| tbl-cap: "Exploratory in-sample threshold comparison"
 #| echo: false
 
 conventional_tn, conventional_fp, _, _ = confusion_matrix(
@@ -2247,8 +2366,9 @@ display(
 )
 ```
 
-The lower threshold increases sensitivity to severe breaches at the cost of
-specificity and precision.
+The lower cutoff raises sensitivity but reduces specificity and precision.
+This in-sample comparison is exploratory; Section 7 selects its cutoff on
+training data only.
 
 # Holdout Validation
 
@@ -2302,7 +2422,7 @@ display(
 ## Training Model and Threshold Selection
 
 The logistic-regression specification is refitted using only the training
-sample. Youden's \(J\) statistic is then calculated from training predictions
+sample. Youden's $J$ statistic is then calculated from training predictions
 to select the classification threshold without using test outcomes.
 
 ```{python}
@@ -2443,10 +2563,8 @@ display(
 )
 ```
 
-The cross-validation results provide a resampling-based check of discrimination
-stability within the training sample. Convergence status is reported for each
-fold so that ROC-AUC results are interpreted only from successfully fitted
-models.
+Five training folds provide a check on ROC-AUC stability; all five fits
+converged.
 
 ## Training vs Test Discrimination
 
@@ -2475,8 +2593,7 @@ display(
 )
 ```
 
-Similar training and test ROC-AUC values indicate that discrimination is
-stable across the holdout split.
+Training and test ROC-AUC are similar in this split.
 
 ## Held-Out Classification Performance
 
@@ -2484,7 +2601,7 @@ The training-derived threshold is applied unchanged to the held-out test sample.
 
 ```{python}
 #| label: tbl-holdout-threshold-performance
-#| tbl-cap: "Held-out classification performance at the training-derived threshold"
+#| tbl-cap: "Held-out classification at the training-derived threshold"
 #| echo: false
 
 test_prediction = (
@@ -2515,66 +2632,82 @@ test_f1 = f1_score(
     zero_division=0,
 )
 
+def wilson_interval(successes, total, z=1.9599639845):
+    """Two-sided 95% Wilson interval for a binomial proportion."""
+    p = successes / total
+    denominator = 1 + z**2 / total
+    center = (p + z**2 / (2 * total)) / denominator
+    half_width = (
+        z * np.sqrt(p * (1 - p) / total + z**2 / (4 * total**2))
+        / denominator
+    )
+    return center - half_width, center + half_width
+
+def interval_label(successes, total):
+    lower, upper = wilson_interval(successes, total)
+    return f"{lower:.1%}–{upper:.1%}"
+
 holdout_performance = pd.DataFrame({
-    "Metric": [
-        "Selected Threshold",
-        "Sensitivity",
-        "Specificity",
-        "Precision",
-        "F1 Score",
-        "True Negatives",
-        "False Positives",
-        "False Negatives",
-        "True Positives",
+    "Measure": [
+        "Decision threshold",
+        "Sensitivity (severe)",
+        "Specificity (non-severe)",
+        "Precision (severe)",
+        "F1 (severe)",
     ],
-    "Value": [
-        selected_threshold,
-        test_sensitivity,
-        test_specificity,
-        test_precision,
-        test_f1,
-        tn,
-        fp,
-        fn,
-        tp,
+    "Estimate": [
+        f"{selected_threshold:.4f}",
+        f"{test_sensitivity:.1%} ({tp:,}/{tp + fn:,})",
+        f"{test_specificity:.1%} ({tn:,}/{tn + fp:,})",
+        f"{test_precision:.1%} ({tp:,}/{tp + fp:,})",
+        f"{test_f1:.3f}",
+    ],
+    "95% Wilson CI": [
+        "—",
+        interval_label(tp, tp + fn),
+        interval_label(tn, tn + fp),
+        interval_label(tp, tp + fp),
+        "—",
     ],
 })
 
 display(
-    holdout_performance.style
-    .format({
-        "Value": lambda value: (
-            f"{value:.4f}"
-            if isinstance(value, (float, np.floating))
-            else f"{value:,}"
-        )
-    })
-    .hide(axis="index")
+    holdout_performance.style.hide(axis="index")
+    .set_table_attributes('class="regression-table"')
 )
 ```
 
-The training-derived threshold favors sensitivity to severe breaches, with
-lower precision under the imbalanced outcome.
+The model detects 124 of 160 severe cases and flags 513 non-severe cases;
+precision is 19.5%. A flag calls for review.
+
+*Note.* Wilson intervals condition on this split and cutoff; they exclude
+model-fitting uncertainty. F1 has no Wilson interval.
 
 ## Held-Out Confusion Matrix
 
-The confusion matrix shows the types of classification errors in the held-out
-test sample.
+Rows are actual classes; columns are predictions for the held-out test.
 
 ```{python}
-#| label: tbl-holdout-confusion-matrix
-#| output: false
-#| tbl-cap: "Confusion matrix for the held-out test sample"
+#| label: holdout-confusion-matrix
 #| echo: false
 
 holdout_confusion = pd.DataFrame(
     [[tn, fp], [fn, tp]],
-    index=["Actual Non-Severe", "Actual Severe"],
-    columns=["Predicted Non-Severe", "Predicted Severe"],
+    index=["Non-severe", "Severe"],
+    columns=["Predicted non-severe", "Predicted severe"],
 )
 
-display(holdout_confusion)
+holdout_confusion.index.name = "Actual class"
+display(
+    holdout_confusion.style
+    .format("{:,.0f}")
+    .set_caption(f"Held-out confusion matrix at threshold {selected_threshold:.4f}")
+    .set_table_attributes('class="regression-table"')
+)
 ```
+
+Among 1,576 test records, 36 severe cases were missed and 513 non-severe
+cases were flagged.
 
 ## Probability Performance
 
@@ -2600,12 +2733,14 @@ test_brier = brier_score_loss(
 probability_performance = pd.DataFrame({
     "Metric": [
         "ROC-AUC",
-        "PR-AUC",
+        "Average precision (PR-AUC)",
+        "Severe prevalence (PR baseline)",
         "Brier Score",
     ],
     "Value": [
         roc_auc_score(y_test, test_probability),
         test_pr_auc,
+        y_test.mean(),
         test_brier,
     ],
 })
@@ -2617,8 +2752,8 @@ display(
 )
 ```
 
-PR-AUC is evaluated relative to severe-breach prevalence, while the Brier score
-summarizes predicted-probability error.
+The severe prevalence (10.15%) is the baseline for average precision.
+Lower Brier scores indicate better probability accuracy.
 
 ## Calibration
 
@@ -2839,8 +2974,8 @@ $$
 S_i = \frac{1}{K}\sum_{k=1}^{K}s_{ik}
 $$
 
-where \(S_i\) is the overall score for capability \(i\), \(s_{ik}\) is its score
-on criterion \(k\), and \(K=8\) is the number of criteria.
+where $S_i$ is the overall score for capability $i$, $s_{ik}$ is its score
+on criterion $k$, and $K=8$ is the number of criteria.
 
 ```{python}
 #| label: tbl-equal-weight-ranking
@@ -2917,13 +3052,13 @@ display(
 )
 ```
 
-The weighted score for capability \(i\) is calculated as:
+The weighted score for capability $i$ is calculated as:
 
 $$
 S_i = \sum_{k=1}^{K} w_k s_{ik}
 $$
 
-where \(w_k\) is the weight assigned to criterion \(k\), \(s_{ik}\) is the
+where $w_k$ is the weight assigned to criterion $k$, $s_{ik}$ is the
 component score, and the criterion weights sum to 1.
 
 ```{python}
@@ -3071,9 +3206,9 @@ $$
 
 where:
 
-- \(\lambda\) = assumed annual breach frequency,
-- \(p_s\) = probability that a breach is severe, conditional on a breach, and
-- \(L\) = assumed financial loss associated with a severe breach.
+- $\lambda$ = assumed annual breach frequency,
+- $p_s$ = probability that a breach is severe, conditional on a breach, and
+- $L$ = assumed financial loss associated with a severe breach.
 
 ### Avoided Loss
 
@@ -3083,7 +3218,7 @@ $$
 AL = ALE \times r
 $$
 
-where \(r\) is the assumed proportional reduction in expected loss associated
+where $r$ is the assumed proportional reduction in expected loss associated
 with the investment.
 
 ### Annual Net Benefit
@@ -3094,12 +3229,12 @@ $$
 NB = AL - C_o
 $$
 
-where \(C_o\) is annual operating cost.
+where $C_o$ is annual operating cost.
 
 ### Net Present Value
 
-For an initial investment \(C_0\), annual net benefit \(NB\), discount rate
-\(d\), and investment horizon \(T\), net present value is:
+For an initial investment $C_0$, annual net benefit $NB$, discount rate
+$d$, and investment horizon $T$, net present value is:
 
 $$
 NPV =
@@ -3214,7 +3349,7 @@ financial_assumptions = pd.DataFrame({
     ],
 })
 
-financial_assumptions_display = financial_assumptions.copy()
+financial_assumptions_display = financial_assumptions.astype(object).copy()
 
 percent_inputs = {
     "Severe-Breach Probability",
