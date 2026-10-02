@@ -1,4 +1,4 @@
-# Healthcare Security Architecture Investments
+# Healthcare CyberSecurity Architecture Investments
 
 **Using Public Breach Evidence, NIST Guidance, and Financial Decision Analysis**
 
